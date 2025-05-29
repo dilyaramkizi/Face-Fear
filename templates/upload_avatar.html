@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Change Avatar</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="avatar" class="form-label">Select a new avatar image:</label>
+            {{ form.avatar(class="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload Avatar</button>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

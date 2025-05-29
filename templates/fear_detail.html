@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">{{ fear.title }}</h2>
+    <p class="text-center text-muted">Posted by {{ fear.author.username }} on {{ fear.created_at.strftime('%Y-%m-%d') }}</p>
+
+    <div class="mt-4">
+        <p>{{ fear.description }}</p>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('fear_bp.edit_fear', fear_id=fear.id) }}" class="btn btn-warning">Edit Post</a>
+
+        <!-- Trigger Button -->
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            Delete
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                Are you sure you want to delete the fear post titled "<strong>{{ fear.title }}</strong>"?
+            </div>
+            <div class="modal-footer">
+                <form action="{{ url_for('fear_bp.delete_fear', fear_id=fear.id) }}" method="POST">
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Go Back</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h4>Comments</h4>
+        {% set visible_comments = fear.comments|rejectattr("is_toxic")|list %}
+        {% if visible_comments %}
+            <div class="list-group">
+            {% for comment in visible_comments %}
+                <div class="list-group-item">
+                <strong>{{ comment.author.username }}</strong>
+                <p>{{ comment.content }}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">No comments yet.</p>
+        {% endif %}
+
+        <!-- Show warning to comment authors about their hidden toxic comments -->
+        {% set my_hidden_comments = fear.comments|selectattr("is_toxic")|selectattr("user_id", "equalto", current_user.id)|list %}
+        {% if my_hidden_comments %}
+            <div class="alert alert-warning mt-3">
+            <small>
+                You have {{ my_hidden_comments|length }} comment(s) hidden because they were flagged as toxic.
+            </small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
