@@ -121,7 +121,6 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     """Log out"""
-    print("Logout triggered!")  # or use logging
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))

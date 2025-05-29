@@ -42,7 +42,7 @@ def create_app():
 
     login_manager.init_app(app)
     login_manager.login_view = 'auth_bp.login'
-    login_manager.logout_view = 'auth_bp.logout'  # use the correct name
+    login_manager.logout_view = 'auth_bp.logout'
 
     # Retrieving user_id from db for Flask Login
     @login_manager.user_loader

@@ -44,20 +44,6 @@ def dashboard():
 def add_comment(fear_id):
     content = request.form.get('content')
     
-    # Fetch all data required for the index.html page
-    fears = Fear.query.order_by(Fear.created_at.desc()).all()
-    users = User.query.all()
-
-    # If content is empty, show modal with reason
-    if not content:
-        return render_template(
-            'index.html',
-            fears=fears,
-            users=users,
-            show_toxic_modal=True,
-            toxic_reason="🚫 Comment cannot be empty."
-        )
-
     toxicity = analyze_toxicity(content)
     if toxicity["is_toxic"]:
         # 1) record the warning

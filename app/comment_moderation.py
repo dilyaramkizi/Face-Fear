@@ -26,7 +26,6 @@ def add_toxic_warning(user, now=None, block_minutes=5, reset_after_hours=6):
     """Increment a user’s warning count; if ≥3 within reset_after_hours, block login."""
     now = now or datetime.utcnow()
 
-    # if last warning is “stale,” start over
     if not user.last_warning_time \
        or (now - user.last_warning_time) > timedelta(hours=reset_after_hours):
         user.toxic_warning_count = 1
